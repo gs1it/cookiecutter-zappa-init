@@ -1,0 +1,11 @@
+{
+    "repo_name": "aws-lamba-with-zappa",
+    "python_version": "3.7",
+    "project_name": "My-Awesome-Project",
+    "environment": "dev",
+    "aws_region": "eu-west-1",
+    "lambda_handler": "my_module.handler",
+    "lambda_description": "My Awesome Lambda",
+    "lambda_role_name": "basic-lambda-role",
+    "zappa_s3_bucket": "zappa.deploy.gs1it.org"
+}

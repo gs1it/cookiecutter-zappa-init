@@ -1,0 +1,25 @@
+#!/bin/bash
+
+ZDOCKER_IMAGE=zuppalalambda
+ZCOMMAND=$1
+ZENV=$2
+if [ $# -eq 0 ] ; then
+    echo -e "\033[0;31mNo arguments supplied\033[0m"
+    echo "Usage: ./zuppa <zappa command> <zappa environment>"
+    exit 1
+fi
+if [ -z "$ZCOMMAND" ]; then
+    echo -e "\033[0;31mNo command supplied\033[0m"
+    exit 1
+fi
+if [ -z "$ZENV" ]; then
+    echo -e "\033[0;31mNo environment supplied\033[0m"
+    exit 1
+fi
+if [[ "$(docker images -q $ZDOCKER_IMAGE 2> /dev/null)" == "" ]]; then
+    echo -e "\033[0;32mBuilding $ZDOCKER_IMAGE\033[0m"
+    docker build -t $ZDOCKER_IMAGE .
+fi
+echo -e "\033[0;32mPackaging $ZENV\033[0m"
+build="source ~/.env/bin/activate && ~/.env/bin/pip install pip -U && ~/.env/bin/pip install -r requirements.txt -U && zappa $ZCOMMAND $ZENV"
+docker run -v ${HOME}/.aws/credentials:/root/.aws/credentials:ro --volume=$(pwd):/zuppa --workdir="/zuppa" -t $ZDOCKER_IMAGE bash -c "$build"
