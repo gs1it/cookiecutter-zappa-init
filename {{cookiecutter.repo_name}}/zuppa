@@ -21,5 +21,5 @@ if [[ "$(docker images -q $ZDOCKER_IMAGE 2> /dev/null)" == "" ]]; then
     docker build -t $ZDOCKER_IMAGE .
 fi
 echo -e "\033[0;32mPackaging $ZENV\033[0m"
-build="source ~/.env/bin/activate && ~/.env/bin/pip install pip -U && ~/.env/bin/pip install -r requirements.txt -U && zappa $ZCOMMAND $ZENV"
+build="python -m venv --clear ~/.env && source ~/.env/bin/activate && ~/.env/bin/pip install pip -U && ~/.env/bin/pip install -r requirements.txt -U && zappa $ZCOMMAND $ZENV"
 docker run -v ${HOME}/.aws/credentials:/root/.aws/credentials:ro --volume=$(pwd):/zuppa --workdir="/zuppa" -t $ZDOCKER_IMAGE bash -c "$build"
